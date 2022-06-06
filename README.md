@@ -128,6 +128,45 @@ kubectl apply -f deployment.yaml
 kubectl apply -f svc.yaml
 ```
 
+## CI/CD for Docker Image and Application deployment on K8s
+Created pipeline for CI/CD on jenkins with help of K8S which helps to deploy application in real time.
+```
+pipeline {
+    environment {
+        registry = "hackcoderr/flask" 
+        registryCredential = 'docker-cred'
+        dockerImage = ''
+    }
+    agent any
+
+    stages {
+        stage('Build Image') { 
+            steps { 
+                script { 
+                    dockerImage = docker.build registry  
+                }
+            } 
+        }
+        stage('Push Image') { 
+            steps { 
+                script { 
+                    docker.withRegistry( '', registryCredential ) { 
+                        dockerImage.push() 
+                    }
+                } 
+            }
+        }
+        stage('Deployment') {
+            steps {
+                sh 'kubectl apply -f deployment.yaml'
+                sh 'kubectl kubectl apply -f svc.yaml'
+            }
+        }
+    }
+}
+```
+
+
 ## Test
 
 Now lets test it.

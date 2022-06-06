@@ -1,7 +1,6 @@
 pipeline {
     environment {
         registry = "hackcoderr/flask:latest" 
-        registryCredential = 'docker-cred'
         dockerImage = ''
     }
     agent any
@@ -14,15 +13,6 @@ pipeline {
                     dockerImage = docker.build registry  
                 }
             } 
-        }
-        stage('Push Image') { 
-            steps { 
-                script { 
-                    docker.withRegistry( '', registryCredential ) { 
-                        dockerImage.push() 
-                    }
-                } 
-            }
         }
     }
 }

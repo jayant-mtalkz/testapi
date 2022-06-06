@@ -103,4 +103,35 @@ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 Copy the alphanumeric terminal 32-character password and paste into the Administrator Password field, then click Continue. 
 
 
+## Dockerize a Flask Application
+Basic directory structure
+```
+app
+├── app.py
+├── Dockerfile
+├── requirements.txt
+└── venv
+```
+Build a Docker Image
+```
+docker build -t hackcoderr/flask .
+```
 
+# Kubernetes Server
+
+All resources in Kubernetes are created using yaml configurations which are located ``./k8s/``. We usually define pod inside deployment so need two yaml files.
+
+Now as per these yaml files, lets create resources in kubernetes.
+
+```
+kubectl apply -f deployment.yaml
+kubectl apply -f svc.yaml
+```
+
+## Test
+
+Now lets test it.
+
+```
+http://aeba27e5d759948ac83907902a079c08-1882761904.ap-south-1.elb.amazonaws.com:5000/
+```

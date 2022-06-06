@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: "2022-06-06T10:17:42Z"
+  finalizers:
+  - service.kubernetes.io/load-balancer-cleanup
+  name: simple-flask-app
+  namespace: default
+  resourceVersion: "203777"
+  uid: eba27e5d-7599-48ac-8390-7902a079c089
+spec:
+  clusterIP: 172.20.113.157
+  clusterIPs:
+  - 172.20.113.157
+  externalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - nodePort: 32668
+    port: 5000
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: simple-flask-app
+  sessionAffinity: None
+  type: LoadBalancer
+status:
+  loadBalancer:
+    ingress:
+    - hostname: aeba27e5d759948ac83907902a079c08-1882761904.ap-south-1.elb.amazonaws.com

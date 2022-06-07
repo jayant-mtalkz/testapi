@@ -23,5 +23,10 @@ pipeline {
                 } 
             }
         }
+       stage('Deploy') {
+            steps {
+                sh 'sudo kubectl get nodes'
+            }
+        }
     }
 }

@@ -117,60 +117,78 @@ Build a Docker Image
 docker build -t hackcoderr/flask .
 ```
 
+
+## CI/CD for Build and Publish Docker image
+
+Created pipeline for CI/CD on jenkins for building and publishing the docker image on DockerHub.
+```
+pipeline {
+    environment {
+        registry = "hackcoderr/flask:latest"
+        registryCredential = 'dockercred'
+        dockerImage = ''
+        }
+    agent any
+
+    stages {
+        stage('Build Image') {
+            steps {
+                script {
+                    dockerImage = docker.build registry
+                }
+            }
+        }
+        stage('Push Image') {
+            steps {
+                script {
+                    docker.withRegistry( '', registryCredential ) {
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
+    }
+}
+
+```
+
 # Kubernetes Server
 
-All resources in Kubernetes are created using yaml configurations which are located ``./k8s/``. We usually define pod inside deployment so need two yaml files.
+All resources in Kubernetes are created using yaml configurations. We usually define pod inside deployment so need three yaml files.
 
 Now as per these yaml files, lets create resources in kubernetes.
 
+Start a Deployment that runs a container using the image made by CD/CD, and expose it as a Service using the following manifest.To do so, run the following command:
 ```
 kubectl apply -f deployment.yaml
 kubectl apply -f svc.yaml
 ```
 
-## CI/CD for Docker Image and Application deployment on K8s
-Created pipeline for CI/CD on jenkins with help of K8S which helps to deploy application in real time.
-```
-pipeline {
-    environment {
-        registry = "hackcoderr/flask" 
-        registryCredential = 'docker-cred'
-        dockerImage = ''
-    }
-    agent any
+### Create the HorizontalPodAutoscaler
 
-    stages {
-        stage('Build Image') { 
-            steps { 
-                script { 
-                    dockerImage = docker.build registry  
-                }
-            } 
-        }
-        stage('Push Image') { 
-            steps { 
-                script { 
-                    docker.withRegistry( '', registryCredential ) { 
-                        dockerImage.push() 
-                    }
-                } 
-            }
-        }
-        stage('Deployment') {
-            steps {
-                sh 'kubectl apply -f deployment.yaml'
-                sh 'kubectl kubectl apply -f svc.yaml'
-            }
-        }
-    }
-}
+Before creating HPA, create metrics pod and Metrics Server is a scalable, efficient source of container resource metrics for Kubernetes built-in autoscaling pipelines.
 ```
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/high-availability.yaml
+```
+Create the HorizontalPodAutoscaler:
+
+```
+kubectl apply -f hpa.yaml
+```
+
+
 
 
 ## Test
-
-Now lets test it.
+Increase the load 
 
 ```
-http://aeba27e5d759948ac83907902a079c08-1882761904.ap-south-1.elb.amazonaws.com:5000/
+# Run this in a separate terminal
+# so that the load generation continues and you can carry on with the rest of the steps
+kubectl run -i --tty load-generator --rm --image=busybox:1.28 --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://aeba27e5d759948ac83907902a079c08-1882761904.ap-south-1.elb.amazonaws.com:5000/; done"
 ```
+Now run:
+```
+kubectl get hpa simple-flask-app --watch
+```
+

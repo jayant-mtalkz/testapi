@@ -23,11 +23,5 @@ pipeline {
                 } 
             }
         }
-       stage('Deploy') {
-            steps {
-                sh 'cd'
-                sh 'kubectl get pod -o wide --kubeconfig ~/.kube/config'
-            }
-        }
     }
 }

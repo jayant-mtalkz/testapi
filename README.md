@@ -176,7 +176,16 @@ Create the HorizontalPodAutoscaler:
 kubectl apply -f hpa.yaml
 ```
 
+# ELK Stack
 
+Apply ELK stack on Kubernetes cluster
+```
+kubectl apply -f elk/elasticsearch-ss.yaml 
+kubectl apply -f elk/logstash-deployment.yaml 
+kubectl apply -f elk/filebeat-ds.yaml 
+kubectl apply -f elk/metricbeat-ds.yaml 
+kubectl apply -f elk/kibana-deployment.yaml
+```
 
 
 ## Test

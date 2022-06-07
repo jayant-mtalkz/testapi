@@ -8,5 +8,4 @@ terraform/jenkins/jenkins.tf
 terraform/jenkins/terraform.tfstate
 terraform/jenkins/terraform.tfstate.backup
 terraform/jenkins/.terraform.lock.hcl
-~
- 
+terraform/jenkins/.terraform/ 

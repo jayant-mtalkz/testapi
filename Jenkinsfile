@@ -26,7 +26,7 @@ pipeline {
        stage('Deploy') {
             steps {
                 sh 'cd'
-                sh 'sudo kubectl get pod -o wide  --kubeconfig /root/admin.conf'
+                sh 'kubectl get pod -o wide  --kubeconfig ~/.kube/config'
             }
         }
     }

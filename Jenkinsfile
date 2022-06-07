@@ -1,9 +1,9 @@
 pipeline {
     environment {
-        registry = "hackcoderr/flask" 
-        registryCredential = 'docker-cred'
+        registry = "hackcoderr/flask:latest" 
+        registryCredential = 'dockercred'
         dockerImage = ''
-    }
+        }
     agent any
 
     stages {
@@ -21,12 +21,6 @@ pipeline {
                         dockerImage.push() 
                     }
                 } 
-            }
-        }
-        stage('Deployment') {
-            steps {
-                sh 'kubectl apply -f deployment.yaml'
-                sh 'kubectl kubectl apply -f svc.yaml'
             }
         }
     }

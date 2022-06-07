@@ -25,6 +25,7 @@ pipeline {
         }
        stage('Deploy') {
             steps {
+                sh 'cd'
                 sh 'kubectl get nodes'
             }
         }

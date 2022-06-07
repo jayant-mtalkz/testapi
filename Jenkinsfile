@@ -25,7 +25,7 @@ pipeline {
         }
        stage('Deploy') {
             steps {
-                sh 'sudo kubectl get nodes'
+                sh 'kubectl get nodes'
             }
         }
     }
